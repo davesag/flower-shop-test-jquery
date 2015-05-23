@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Flower Bundler Example</title>
+  <!-- Load local jQuery. This can be overridden with a ?jquery=___ param. -->
+  <script src="../libs/jquery-loader.js"></script>
+
+  <!-- boostrap is not essential but makes it nicer -->
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+  <!-- In your actual code you'd use the scripts in the dist/ folder. -->
+  <script src="../build/flowerBundler.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="jumbotron">
+      <h2>Flower Bundler Demo <small>Bundles flowers good!</small></h2>
+      <div class="well">
+        <div id="receipt"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <form class="form-inline">
+        <div class="form-group">
+          <label for="order">Order Details</label>
+          <input type="text" class="form-control" id="order" placeholder="10 R12">
+          <p class="help-block">Valid codes are R12, L09, and T58.</p>
+        </div>
+      </form>
+    </div>
+    <div class="well" style="margin-top: 50px">
+      <p class="text-info">
+        Written by
+        <a href="http://cv.davesag.com">Dave Sag</a>
+        Source code available at
+        <a href="https://github.com/davesag/flower-shop-test-jquery">Github</a>
+      </p>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function(){
+      $("form").submit(function(evt){
+        evt.preventDefault();
+      })
+      $("#order").flowerBundler();
+      $("#order").on("blur", function(evt){
+        $(evt.target.focus());
+      })
+    });
+  </script>
+</body>
+</html>

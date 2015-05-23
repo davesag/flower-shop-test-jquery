@@ -31,7 +31,7 @@
 
   class Receipt
     constructor: (@request, @results) ->
-      @total = @computeTotal
+      @total = @computeTotal()
       return
 
     computeTotal: ->
@@ -42,28 +42,25 @@
     toFormatted: ->
       output = "#{@request} #{@toDollars(@total)}"
       for result in @results
-        do ->
+        do =>
           output += "\n     #{result.count} x #{result.size} #{@toDollars(result.price)}"
-      return output
+      return "<pre>#{output}</pre>"
 
     toDollars: (cents) ->
-      return "$#{cents.toFixed(2)}"
+      dollars = cents / 100.0
+      return "$#{(dollars).toFixed(2)}"
 
   class BundleChooser
     constructor: (catalogue, request)->
       @order = Order.parse request
       @bundles = catalogue[@order.code]
+      throw new Error("Unknown Flower Code") if @bundles is undefined
       return
 
     choose: ->
-      bundles = $.extend true, [], @bundles
-      console.debug "Choosing", @order.size, "from", bundles
-      return @chooseBundles(@order.size, bundles)
+      return @chooseBundles(@order.size, @bundles.slice())
 
     chooseBundles: (flowerCount, bundles) ->
-      console.debug "flowerCount", flowerCount
-      console.debug "bundles", bundles
-      console.debug "@bundles", @bundles
       @stash = []
       try
         @gatherBundles(flowerCount, bundles)
@@ -76,14 +73,14 @@
     gatherBundles: (flowerCount, bundles) ->
       allowedBundles = @trimBundles(flowerCount, bundles)
       bundle = allowedBundles[0]
-      count = flowerCount / bundle.size
+      count = Math.floor(flowerCount / bundle.size)
       @stash.push new Result(count, bundle)
       @gatherBundles(flowerCount - count * bundle.size, allowedBundles) unless flowerCount % bundle.size is 0
       return
 
     trimBundles: (flowerCount, bundles) ->
       allowedBundles = bundles.filter (bundle) ->
-        return bundle.size > flowerCount
+        return flowerCount >= bundle.size
       throw new Error() if allowedBundles.length is 0
       return allowedBundles
 
@@ -97,10 +94,13 @@
     @each =>
       $(@).on @options.event, (evt) =>
         request = $(evt.target).val()
-        chooser = new BundleChooser(@options.catalogue, request)
-        results = chooser.choose()
-        receipt = new Receipt(request, results)
-        $(@options.receiptSelector).append receipt.toFormatted()
+        try
+          chooser = new BundleChooser(@options.catalogue, request)
+          results = chooser.choose()
+          receipt = new Receipt(request, results)
+          $(@options.receiptSelector).html receipt.toFormatted()
+        catch err
+          $(@options.receiptSelector).html "<p>#{err}</p>"
       return @ # because it's chainable.
 
   # defaults

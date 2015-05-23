@@ -31,15 +31,11 @@
   module "simple tests",
 
     setup: ->
-      @elements = $("#qunit-fixture").children(".qunit-container").children("input")
       @receipt = $("#receipt")
-
-  # all jQuery plugins must be chainable.
-  test "is chainable", ->
-    strictEqual(@elements.flowerBundler(), @elements, "should be chainable")
+      @receipt.empty()
 
   asyncTest "changing a Rose Order form field emits the correct receipt", ->
-    target = @elements.first()
+    target = $("#rose")
     target.flowerBundler()
     target.on "change", (evt) =>
       evt.preventDefault()
@@ -49,5 +45,31 @@
       start()
     target.trigger "change"
     expect 3
+
+  asyncTest "changing a Lily Order form field emits the correct receipt", ->
+    target = $("#lily")
+    target.flowerBundler()
+    target.on "change", (evt) =>
+      evt.preventDefault()
+      ok @receipt.text().indexOf("15 L09") > -1, "Receipt did not contain the order"
+      ok @receipt.text().indexOf("$41.90") > -1, "Receipt did not contain the total price"
+      ok @receipt.text().indexOf("1 x 9 $24.95") > -1, "Receipt did not contain the first correct receipt line"
+      ok @receipt.text().indexOf("1 x 6 $16.95") > -1, "Receipt did not contain the second correct receipt line"
+      start()
+    target.trigger "change"
+    expect 4
+
+  asyncTest "changing a Tulip Order form field emits the correct receipt", ->
+    target = $("#tulip")
+    target.flowerBundler()
+    target.on "change", (evt) =>
+      evt.preventDefault()
+      ok @receipt.text().indexOf("13 T58") > -1, "Receipt did not contain the order"
+      ok @receipt.text().indexOf("$25.85") > -1, "Receipt did not contain the total price"
+      ok @receipt.text().indexOf("2 x 5 $9.95") > -1, "Receipt did not contain the first correct receipt line"
+      ok @receipt.text().indexOf("1 x 3 $5.95") > -1, "Receipt did not contain the second correct receipt line"
+      start()
+    target.trigger "change"
+    expect 4
 
 ) jQuery
