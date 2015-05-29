@@ -1,0 +1,12 @@
+languages:
+  Javascript: true
+exclude_paths:
+  - "brief"
+  - "dist"
+  - "example"
+  - "libs"
+  - "node_modules"
+  - "test"
+  - "src"
+  - "build/test"
+  - "build/before.js"
