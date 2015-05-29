@@ -4,7 +4,7 @@ This is [Dave Sag](http://cv.davesag.com)'s implementation of [Cogent](http://ww
 
 *If you have been asked to do this test I urge you to not to copy my, or anyone else's, work.*
 
-[![Build Status](https://travis-ci.org/davesag/flower-shop-test-jquery.svg?branch=master)](https://travis-ci.org/davesag/flower-shop-test-jquery)
+[![Build Status](https://travis-ci.org/davesag/flower-shop-test-jquery.svg?branch=master)](https://travis-ci.org/davesag/flower-shop-test-jquery) [![Code Climate](https://codeclimate.com/github/davesag/flower-shop-test-jquery/badges/gpa.svg)](https://codeclimate.com/github/davesag/flower-shop-test-jquery)
 
 ## Declaration
 
