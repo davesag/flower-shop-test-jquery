@@ -35,7 +35,7 @@
       @receipt.empty()
 
   asyncTest "changing a Rose Order form field emits the correct receipt", ->
-    target = $("#rose")
+    target = $("#rose10")
     target.flowerBundler()
     target.on "change", (evt) =>
       evt.preventDefault()
@@ -47,7 +47,7 @@
     expect 3
 
   asyncTest "changing a Lily Order form field emits the correct receipt", ->
-    target = $("#lily")
+    target = $("#lily15")
     target.flowerBundler()
     target.on "change", (evt) =>
       evt.preventDefault()
@@ -60,7 +60,7 @@
     expect 4
 
   asyncTest "changing a Tulip Order form field emits the correct receipt", ->
-    target = $("#tulip")
+    target = $("#tulip13")
     target.flowerBundler()
     target.on "change", (evt) =>
       evt.preventDefault()
@@ -68,6 +68,19 @@
       ok @receipt.text().indexOf("$25.85") > -1, "Receipt did not contain the total price"
       ok @receipt.text().indexOf("2 x 5 $9.95") > -1, "Receipt did not contain the first correct receipt line"
       ok @receipt.text().indexOf("1 x 3 $5.95") > -1, "Receipt did not contain the second correct receipt line"
+      start()
+    target.trigger "change"
+    expect 4
+
+  asyncTest "changing a Tulip Order form field emits the correct receipt", ->
+    target = $("#tulip16")
+    target.flowerBundler()
+    target.on "change", (evt) =>
+      evt.preventDefault()
+      ok @receipt.text().indexOf("16 T58") > -1, "Receipt did not contain the order"
+      ok @receipt.text().indexOf("$31.80") > -1, "Receipt did not contain the total price"
+      ok @receipt.text().indexOf("2 x 5 $9.95") > -1, "Receipt did not contain the first correct receipt line"
+      ok @receipt.text().indexOf("2 x 3 $5.95") > -1, "Receipt did not contain the second correct receipt line"
       start()
     target.trigger "change"
     expect 4

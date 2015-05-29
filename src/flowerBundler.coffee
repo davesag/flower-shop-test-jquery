@@ -29,6 +29,10 @@
       @price = bundle.price
       return
 
+    decrementCount: ->
+      @count--
+      return
+
   class Receipt
     constructor: (@request, @results) ->
       @total = @computeTotal()
@@ -71,18 +75,36 @@
         @chooseBundles(flowerCount, bundles)
 
     gatherBundles: (flowerCount, bundles) ->
-      allowedBundles = @trimBundles(flowerCount, bundles)
-      bundle = allowedBundles[0]
-      count = Math.floor(flowerCount / bundle.size)
-      @stash.push new Result(count, bundle)
-      @gatherBundles(flowerCount - count * bundle.size, allowedBundles) unless flowerCount % bundle.size is 0
+      @trimBundles(flowerCount, bundles)
+      @bundle = @allowedBundles[0]
+      @count = Math.floor(flowerCount / @bundle.size)
+      @stash.push new Result(@count, @bundle)
+      @gatherBundles(@recount(flowerCount), @allowedBundles) unless flowerCount % @bundle.size is 0
       return
 
     trimBundles: (flowerCount, bundles) ->
-      allowedBundles = bundles.filter (bundle) ->
+      @allowedBundles = bundles.filter (bundle) ->
         return flowerCount >= bundle.size
-      throw new Error() if allowedBundles.length is 0
-      return allowedBundles
+      throw new Error() if @allowedBundles.length is 0
+      return
+
+    recount: (flowerCount) ->
+      fc = flowerCount - @count * @bundle.size
+      return if fc < @allowedBundles[@allowedBundles.length - 1].size
+        @adjustedCount(flowerCount)
+      else
+        fc
+
+    adjustedCount: (flowerCount) ->
+      @checkRemainders()
+      last = @stash[@stash.length - 1]
+      last.decrementCount()
+      @allowedBundles.shift()
+      return flowerCount - last.count * @bundle.size
+    
+    checkRemainders: ->
+      throw new Error() if @count is 1 or @allowedBundles.length is 1
+      return
 
   # Main jQuery Collection method.
   $.fn.flowerBundler = (options) ->

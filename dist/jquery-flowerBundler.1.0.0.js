@@ -1,5 +1,5 @@
 /*!
- * The Cogent Flower Shop Test - v1.0.0 - 2015-05-24
+ * The Cogent Flower Shop Test - v1.0.0 - 2015-05-29
  * https://github.com/davesag/flower-shop-test-jquery
  * Copyright (c) 2015 Dave Sag; Licensed MIT
  */
@@ -46,6 +46,10 @@
         this.price = bundle.price;
         return;
       }
+
+      Result.prototype.decrementCount = function() {
+        this.count--;
+      };
 
       return Result;
 
@@ -123,25 +127,47 @@
       };
 
       BundleChooser.prototype.gatherBundles = function(flowerCount, bundles) {
-        var allowedBundles, bundle, count;
-        allowedBundles = this.trimBundles(flowerCount, bundles);
-        bundle = allowedBundles[0];
-        count = Math.floor(flowerCount / bundle.size);
-        this.stash.push(new Result(count, bundle));
-        if (flowerCount % bundle.size !== 0) {
-          this.gatherBundles(flowerCount - count * bundle.size, allowedBundles);
+        this.trimBundles(flowerCount, bundles);
+        this.bundle = this.allowedBundles[0];
+        this.count = Math.floor(flowerCount / this.bundle.size);
+        this.stash.push(new Result(this.count, this.bundle));
+        if (flowerCount % this.bundle.size !== 0) {
+          this.gatherBundles(this.recount(flowerCount), this.allowedBundles);
         }
       };
 
       BundleChooser.prototype.trimBundles = function(flowerCount, bundles) {
-        var allowedBundles;
-        allowedBundles = bundles.filter(function(bundle) {
+        this.allowedBundles = bundles.filter(function(bundle) {
           return flowerCount >= bundle.size;
         });
-        if (allowedBundles.length === 0) {
+        if (this.allowedBundles.length === 0) {
           throw new Error();
         }
-        return allowedBundles;
+      };
+
+      BundleChooser.prototype.recount = function(flowerCount) {
+        var fc;
+        fc = flowerCount - this.count * this.bundle.size;
+        if (fc < this.allowedBundles[this.allowedBundles.length - 1].size) {
+          return this.adjustedCount(flowerCount);
+        } else {
+          return fc;
+        }
+      };
+
+      BundleChooser.prototype.adjustedCount = function(flowerCount) {
+        var last;
+        this.checkRemainders();
+        last = this.stash[this.stash.length - 1];
+        last.decrementCount();
+        this.allowedBundles.shift();
+        return flowerCount - last.count * this.bundle.size;
+      };
+
+      BundleChooser.prototype.checkRemainders = function() {
+        if (this.count === 1 || this.allowedBundles.length === 1) {
+          throw new Error();
+        }
       };
 
       return BundleChooser;
