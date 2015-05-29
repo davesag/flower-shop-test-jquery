@@ -1,12 +1,12 @@
 languages:
-  Javascript: true
+  JavaScript: true
 exclude_paths:
-  - "brief"
-  - "dist"
-  - "example"
-  - "libs"
-  - "node_modules"
-  - "test"
-  - "src"
-  - "build/test"
-  - "build/before.js"
+- "brief"
+- "dist"
+- "example"
+- "libs"
+- "node_modules"
+- "test"
+- "src"
+- "dist/*.min.js"
+- "dist/*.min.js.map"
