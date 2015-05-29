@@ -4,6 +4,8 @@ This is [Dave Sag](http://cv.davesag.com)'s implementation of [Cogent](http://ww
 
 *If you have been asked to do this test I urge you to not to copy my, or anyone else's, work.*
 
+[![Build Status](https://travis-ci.org/davesag/flower-shop-test-jquery.svg?branch=master)](https://travis-ci.org/davesag/flower-shop-test-jquery)
+
 ## Declaration
 
 I solemnly declare that I did not copy this code from anyone else, and that it's all my own original  work.
