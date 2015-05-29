@@ -1,12 +1,12 @@
 languages:
   JavaScript: true
 exclude_paths:
-- "brief"
-- "dist"
-- "example"
-- "libs"
-- "node_modules"
-- "test"
-- "src"
+- "brief/*"
+- "dist/*"
+- "example/*"
+- "libs/*"
+- "node_modules/*"
+- "test/*"
+- "src/*"
 - "dist/*.min.js"
 - "dist/*.min.js.map"
